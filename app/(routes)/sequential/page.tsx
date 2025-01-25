@@ -3,7 +3,7 @@
 import React, { useMemo } from "react"
 import { quoteQueryOptions } from "@/quote-query-options"
 import products from "@/large_products_payload.json"
-import { useSequentialBatchedQueries } from "@/hooks/useSequentialBatchedQueries"
+import { useSequentialBatchedQueries } from "@/hooks/use-sequential-batched-queries"
 import { batchProductsByCategory } from "@/lib/batch-products-by-category"
 
 export default function Home() {
