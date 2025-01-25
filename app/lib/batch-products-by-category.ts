@@ -1,18 +1,11 @@
 import { ItemBatch, Product } from "@/types"
 
-export function batchProductsByCategory(
+export const batchProductsByCategory = (
   products: Product[],
-): ItemBatch<Product>[] {
-  const items = Object.groupBy(products, (product) => product.category)
-
-  const itemBatches: ItemBatch<Product>[] = []
-
-  for (const category in items) {
-    itemBatches.push({
+): ItemBatch<Product>[] =>
+  Object.entries(Object.groupBy(products, (product) => product.category)).map(
+    ([, items]) => ({
       batchId: crypto.randomUUID(),
-      items: items[category] ?? [],
-    })
-  }
-
-  return itemBatches
-}
+      items: items ?? [],
+    }),
+  )
