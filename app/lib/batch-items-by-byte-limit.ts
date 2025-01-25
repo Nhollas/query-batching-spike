@@ -4,8 +4,6 @@ export function batchItemsByByteLimit<TItem>(
   items: TItem[],
   maxBytes: number,
 ): ItemBatch<TItem>[] {
-  const startTime = performance.now()
-
   const itemBatches: ItemBatch<TItem>[] = []
   let tempBatch: TItem[] = []
   let currentBatchBytes = 0
@@ -32,10 +30,6 @@ export function batchItemsByByteLimit<TItem>(
 
   // Flush any remaining items
   pushBatch()
-
-  const endTime = performance.now()
-
-  console.log(`batchItemsByByteLimit took ${endTime - startTime}ms`)
 
   return itemBatches
 }
