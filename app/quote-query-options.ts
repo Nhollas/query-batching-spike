@@ -14,10 +14,11 @@ export const quoteQueryOptions = ({
   return {
     queryKey,
     queryFn: () => getQuotes(items),
+    retry: false,
   } satisfies QueryOptions
 }
 
-type GetQuoteResponse = {
+export type GetQuoteResponse = {
   id: string
 }
 
@@ -28,5 +29,9 @@ export const getQuotes = async (
     method: "POST",
     body: JSON.stringify(items),
   })
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch quotes")
+  }
   return response.json()
 }

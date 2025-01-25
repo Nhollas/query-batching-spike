@@ -5,33 +5,32 @@ import { quoteQueryOptions } from "@/quote-query-options"
 import products from "@/large_products_payload.json"
 import { useSequentialBatchedQueries } from "@/hooks/use-sequential-batched-queries"
 import { batchProductsByCategory } from "@/lib/batch-products-by-category"
+import { QuoteDisplay } from "@/components/quote-display"
 
 export default function Home() {
   const batches = useMemo(() => batchProductsByCategory(products), [])
 
-  const {
-    data: quotes,
-    progress,
-    totalBatches,
-    currentBatch,
-  } = useSequentialBatchedQueries({
-    batches,
-    getQueryOptions: ({ items, batchId }) =>
-      quoteQueryOptions({
-        queryKey: ["quote", `batch-${batchId}`],
-        items,
-      }),
-  })
+  const { results, progress, totalBatches, currentBatch } =
+    useSequentialBatchedQueries({
+      batches,
+      getQueryOptions: ({ items, batchId }) =>
+        quoteQueryOptions({
+          queryKey: ["quote", `batch-${batchId}`],
+          items,
+        }),
+    })
 
   return (
-    <div className="min-h-screen bg-black text-white p-4">
-      <h1>Sequential Batched Queries</h1>
+    <div className="space-y-4">
+      <h1 className="text-xl font-semibold">
+        Sequential Batched Queries (30% Error Rate)
+      </h1>
       <div>Total Batches: {totalBatches}</div>
-      <div>CurrentBatch Batch: {currentBatch}</div>
+      <div>Current Batch: {currentBatch}</div>
       <div>Processing: {progress}%</div>
-      <div>
-        {quotes.map((quote) => (
-          <div key={quote.id}>{quote.id}</div>
+      <div className="flex flex-col gap-2">
+        {results.map((result, index) => (
+          <QuoteDisplay key={index} result={result} />
         ))}
       </div>
     </div>

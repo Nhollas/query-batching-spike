@@ -5,11 +5,12 @@ import { quoteQueryOptions } from "@/quote-query-options"
 import products from "@/large_products_payload.json"
 import { useParallelBatchedQueries } from "@/hooks/use-parallel-batched-queries"
 import { batchItemsByByteLimit } from "@/lib/batch-items-by-byte-limit"
+import { QuoteDisplay } from "@/components/quote-display"
 
 export default function Home() {
-  const batches = useMemo(() => batchItemsByByteLimit(products, 50_000), [])
+  const batches = useMemo(() => batchItemsByByteLimit(products, 25_000), [])
 
-  const { data: quotes } = useParallelBatchedQueries({
+  const results = useParallelBatchedQueries({
     batches,
     getQueryOptions: ({ items, batchId }) =>
       quoteQueryOptions({
@@ -19,11 +20,15 @@ export default function Home() {
   })
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <h1>Parallel Batched Queries</h1>
-      {quotes.map((quote) => (
-        <div key={quote.id}>{quote.id}</div>
-      ))}
+    <div className="space-y-4">
+      <h1 className="text-xl font-semibold">
+        Parallel Batched Queries (30% Error Rate)
+      </h1>
+      <div className="flex flex-col gap-2">
+        {results.map((result, index) => (
+          <QuoteDisplay key={index} result={result} />
+        ))}
+      </div>
     </div>
   )
 }

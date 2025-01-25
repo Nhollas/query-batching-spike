@@ -15,28 +15,28 @@ export const useSequentialBatchedQueries = <TItem, TData>({
 
   const selectedBatches = batches.slice(0, currentBatchIndex)
 
-  const { progress, isLastQuerySuccess, data } = useQueries({
+  const { progress, isLastQueryFetched, results } = useQueries({
     queries: selectedBatches.map((batch) => getQueryOptions(batch)),
     combine: (results) => {
-      const successfulQueryCount = results.filter((r) => r.isSuccess).length
-      const progress = Math.round((successfulQueryCount / batches.length) * 100)
+      const completedQueryCount = results.filter((r) => r.isFetched).length
+      const progress = Math.round((completedQueryCount / batches.length) * 100)
 
       return {
-        data: results.map((r) => r.data).filter(Boolean) as TData[],
+        results,
         progress,
-        isLastQuerySuccess: !!results[results.length - 1]?.isSuccess,
+        isLastQueryFetched: results[results.length - 1]?.isFetched,
       }
     },
   })
 
   useEffect(() => {
-    if (isLastQuerySuccess && currentBatchIndex < batches.length) {
+    if (isLastQueryFetched && currentBatchIndex < batches.length) {
       setCurrentBatchIndex((prev) => prev + 1)
     }
-  }, [isLastQuerySuccess, currentBatchIndex, batches.length])
+  }, [isLastQueryFetched, currentBatchIndex, batches.length])
 
   return {
-    data,
+    results,
     progress,
     currentBatch: currentBatchIndex,
     totalBatches: batches.length,
