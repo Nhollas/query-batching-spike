@@ -1,16 +1,13 @@
 "use client"
 
-import React, { useCallback } from "react"
+import React, { useMemo } from "react"
 import { quoteQueryOptions } from "@/quote-query-options"
 import products from "@/large_products_payload.json"
 import { useSequentialBatchedQueries } from "@/hooks/useSequentialBatchedQueries"
 import { batchProductsByCategory } from "@/lib/batch-products-by-category"
 
 export default function Home() {
-  const getBatchedItems = useCallback(
-    () => batchProductsByCategory(products),
-    [],
-  )
+  const batches = useMemo(() => batchProductsByCategory(products), [])
 
   const {
     data: quotes,
@@ -18,10 +15,10 @@ export default function Home() {
     totalBatches,
     currentBatch,
   } = useSequentialBatchedQueries({
-    getBatchedItems,
-    getQueryOptions: ({ batchId, items }) =>
+    batches,
+    getQueryOptions: ({ items, batchId }) =>
       quoteQueryOptions({
-        queryKey: ["quote", batchId],
+        queryKey: ["quote", `batch-${batchId}`],
         items,
       }),
   })

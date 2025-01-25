@@ -1,24 +1,19 @@
 import { useQueries, UseQueryOptions } from "@tanstack/react-query"
 import { ItemBatch } from "@/types"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 
 interface UseSequentialBatchedQueriesProps<TItem, TData> {
   getQueryOptions: (batch: ItemBatch<TItem>) => UseQueryOptions<TData>
-  getBatchedItems: () => ItemBatch<TItem>[]
+  batches: ItemBatch<TItem>[]
 }
 
 export const useSequentialBatchedQueries = <TItem, TData>({
   getQueryOptions,
-  getBatchedItems,
+  batches,
 }: UseSequentialBatchedQueriesProps<TItem, TData>) => {
   const [currentBatchIndex, setCurrentBatchIndex] = useState(1)
 
-  const batches = useMemo(() => getBatchedItems(), [getBatchedItems])
-
-  const selectedBatches = useMemo(
-    () => batches.slice(0, currentBatchIndex),
-    [batches, currentBatchIndex],
-  )
+  const selectedBatches = batches.slice(0, currentBatchIndex)
 
   const { progress, isLastQuerySuccess, data } = useQueries({
     queries: selectedBatches.map((batch) => getQueryOptions(batch)),

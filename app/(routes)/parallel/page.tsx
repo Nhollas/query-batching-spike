@@ -1,22 +1,19 @@
 "use client"
 
-import React, { useCallback } from "react"
+import React, { useMemo } from "react"
 import { quoteQueryOptions } from "@/quote-query-options"
 import products from "@/large_products_payload.json"
 import { useParallelBatchedQueries } from "@/hooks/useParallelBatchedQueries"
 import { batchItemsByByteLimit } from "@/lib/batch-items-by-byte-limit"
 
 export default function Home() {
-  const getBatchedItems = useCallback(
-    () => batchItemsByByteLimit(products, 50_000),
-    [],
-  )
+  const batches = useMemo(() => batchItemsByByteLimit(products, 50_000), [])
 
   const { data: quotes } = useParallelBatchedQueries({
-    getBatchedItems,
-    getQueryOptions: ({ batchId, items }) =>
+    batches,
+    getQueryOptions: ({ items, batchId }) =>
       quoteQueryOptions({
-        queryKey: ["quote", batchId],
+        queryKey: ["quote", `batch-${batchId}`],
         items,
       }),
   })

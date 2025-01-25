@@ -17,7 +17,13 @@ export const quoteQueryOptions = ({
   } satisfies QueryOptions
 }
 
-export const getQuotes = async (items: Product[]): Promise<{ id: string }> => {
+type GetQuoteResponse = {
+  id: string
+}
+
+export const getQuotes = async (
+  items: Product[],
+): Promise<GetQuoteResponse> => {
   const response = await NextApiClient.fetch("/quote", {
     method: "POST",
     body: JSON.stringify(items),
