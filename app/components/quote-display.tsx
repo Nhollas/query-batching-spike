@@ -11,11 +11,6 @@ export const QuoteDisplay = ({
   if (error)
     return <div className="text-red-500">Quote Error: {error.message}</div>
 
-  /*
-    TODO: Instead of just showing loading, show a faded out version of the product we are quoting for.
-
-    Maybe start with the product category and name.
-  */
   if (isPending) {
     return <div className="text-white/50">Loading...</div>
   }

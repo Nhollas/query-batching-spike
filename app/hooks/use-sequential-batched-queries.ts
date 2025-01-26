@@ -39,6 +39,5 @@ export const useSequentialBatchedQueries = <TItem, TData>({
     results,
     progress,
     currentBatch: currentBatchIndex,
-    totalBatches: batches.length,
   }
 }

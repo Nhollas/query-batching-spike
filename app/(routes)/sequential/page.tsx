@@ -10,22 +10,21 @@ import { QuoteDisplay } from "@/components/quote-display"
 export default function Home() {
   const batches = useMemo(() => batchProductsByCategory(products), [])
 
-  const { results, progress, totalBatches, currentBatch } =
-    useSequentialBatchedQueries({
-      batches,
-      getQueryOptions: ({ items, batchId }) =>
-        quoteQueryOptions({
-          queryKey: ["quote", `batch-${batchId}`],
-          items,
-        }),
-    })
+  const { results, progress, currentBatch } = useSequentialBatchedQueries({
+    batches,
+    getQueryOptions: ({ items, batchId }) =>
+      quoteQueryOptions({
+        queryKey: ["quote", `batch-${batchId}`],
+        items,
+      }),
+  })
 
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">
         Sequential Batched Queries (30% Error Rate)
       </h1>
-      <div>Total Batches: {totalBatches}</div>
+      <div>Total Batches: {batches.length}</div>
       <div>Current Batch: {currentBatch}</div>
       <div>Processing: {progress}%</div>
       <div className="flex flex-col gap-2">
