@@ -10,12 +10,16 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <body>
           <header>
             <nav>
-              <ul className="flex gap-4 p-4 *:bg-white *:p-2 *:rounded-md *:text-black">
+              <ul className="flex gap-4 *:bg-white *:rounded-md *:text-black">
                 <li>
-                  <Link href="/sequential">Sequential</Link>
+                  <Link className="p-2 flex" href="/sequential">
+                    Sequential
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/parallel">Parallel</Link>
+                  <Link className="p-2 flex" href="/parallel">
+                    Parallel
+                  </Link>
                 </li>
               </ul>
             </nav>
