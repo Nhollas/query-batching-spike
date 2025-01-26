@@ -3,15 +3,18 @@
 import React, { useMemo } from "react"
 import { quoteQueryOptions } from "@/quote-query-options"
 import products from "@/large_products_payload.json"
-import { useParallelBatchedQueries } from "@/hooks/use-parallel-batched-queries"
+import { useParallelQueries } from "@/hooks/use-parallel-queries"
 import { batchItemsByByteLimit } from "@/lib/batch-items-by-byte-limit"
 import { QuoteDisplay } from "@/components/quote-display"
 
 export default function Home() {
-  const batches = useMemo(() => batchItemsByByteLimit(products, 25_000), [])
+  const batchedProducts = useMemo(
+    () => batchItemsByByteLimit(products, 25_000),
+    [],
+  )
 
-  const results = useParallelBatchedQueries({
-    batches,
+  const results = useParallelQueries({
+    items: batchedProducts,
     getQueryOptions: ({ items, batchId }) =>
       quoteQueryOptions({
         queryKey: ["quote", `batch-${batchId}`],
